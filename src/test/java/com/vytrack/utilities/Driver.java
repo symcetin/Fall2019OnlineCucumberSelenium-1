@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
@@ -47,10 +48,16 @@ public class Driver {
                     options.setHeadless(true);
                     driverPool.set(new ChromeDriver(options));
                     break;
-                case "firefox":
-                    WebDriverManager.firefoxdriver().setup();
-                    driverPool.set(new FirefoxDriver());
+                case "remote-chrome":
+                    chromeOptions = new ChromeOptions();
+                    try {
+                        URL url = new URL("http://100.24.30.59:4444/wd/hub");
+                        driverPool.set(new RemoteWebDriver(url, chromeOptions));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
                     break;
+
                 default:
                     throw new RuntimeException("Wrong browser name!");
             }
